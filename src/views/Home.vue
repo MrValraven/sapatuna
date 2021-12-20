@@ -77,7 +77,7 @@ export default {
   name: "Home",
   data() {
     return {
-      currentStep: "cycleMenu",
+      currentStep: "mainMenu",
       addingJogador: "",
       jogadores: [],
       currentJogadores: [],
