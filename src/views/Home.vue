@@ -15,12 +15,12 @@
         <li v-for="(jogador, index) in jogadores" :key="index">
           <span>{{ jogador }}</span>
           <select name="orientacaoSexual" id="orientacaoSexual">
-            <option value="s">Bisexual</option>
-            <option value="s">Bisexual</option>
-            <option value="s">Heterossexual</option>
-            <option value="s">Homossexual</option>
-            <option value="s">Lésbica</option>
-            <option value="s">Pansexual</option>
+            <option value="assexual">Assexual</option>
+            <option value="bissexual">Bissexual</option>
+            <option selected value="heterossexual">Heterossexual</option>
+            <option value="homossexual">Homossexual</option>
+            <option value="lesbica">Lésbica</option>
+            <option value="pansexual">Pansexual</option>
           </select>
           <select name="genero" id="genero">
             <option value="s">Homem</option>
@@ -54,12 +54,11 @@
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
-      <h1>{{ currentJogador }} {{ currentTruth }}</h1>
+      <h1>{{ currentJogador }}{{ currentChallenge }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
         <DareCard @click="getNewDare" />
       </div>
-      <button @click="getNewJogador">Novo Jogador</button>
     </div>
   </section>
 </template>
@@ -91,10 +90,11 @@ export default {
       currentDares: [],
       currentDare: "",
       currentDareIndex: 0,
+      currentChallenge: "",
+      isFirstRound: true,
     };
   },
   created() {
-    console.log(localStorage.getItem("jogadores"));
     if (localStorage.getItem("jogadores").length === 0) {
       return;
     }
@@ -154,7 +154,6 @@ export default {
         );
         this.currentJogador = this.currentJogadores[this.currentIndex];
       }
-      this.currentJogador = `${this.currentJogador},`;
     },
     getNewDare() {
       if (!this.currentDare) {
@@ -163,7 +162,7 @@ export default {
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       } else if (this.currentDares.length === 1) {
-        this.currentDares = this.Dares.slice();
+        this.currentDares = this.dares.slice();
         this.currentDareIndex = Math.floor(
           Math.random() * this.currentDares.length
         );
@@ -175,10 +174,12 @@ export default {
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       }
-      this.getNewJogador();
-      console.log(this.currentDare);
-      console.log(this.currentDareIndex);
-      console.log("tamanho: " + this.currentDares.length);
+      if (this.isFirstRound) {
+        this.isFirstRound = false;
+      } else {
+        this.getNewJogador();
+      }
+      this.currentChallenge = `, ${this.currentDare}`;
     },
     getNewTruth() {
       if (!this.currentTruth) {
@@ -199,10 +200,12 @@ export default {
         );
         this.currentTruth = this.currentTruths[this.currentTruthIndex];
       }
-      this.getNewJogador();
-      console.log(this.currentTruth);
-      console.log(this.currentTruthIndex);
-      console.log("tamanho: " + this.currentTruths.length);
+      if (this.isFirstRound) {
+        this.isFirstRound = false;
+      } else {
+        this.getNewJogador();
+      }
+      this.currentChallenge = `, ${this.currentTruth}`;
     },
 
     checkTheme(theme) {
