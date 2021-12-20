@@ -54,12 +54,12 @@
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
-      <h1>{{ currentJogador }}, {{ currentTruth }}</h1>
+      <h1>{{ currentJogador }} {{ currentTruth }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
-        <DareCard />
+        <DareCard @click="getNewDare" />
       </div>
-      <button @click="getNewJogador">Novas perguntas</button>
+      <button @click="getNewJogador">Novo Jogador</button>
     </div>
   </section>
 </template>
@@ -77,7 +77,7 @@ export default {
   name: "Home",
   data() {
     return {
-      currentStep: "playerMenu",
+      currentStep: "cycleMenu",
       addingJogador: "",
       jogadores: [],
       currentJogadores: [],
@@ -87,7 +87,7 @@ export default {
       currentTruths: [],
       currentTruth: "",
       currentTruthIndex: 0,
-      dares: dares.soft,
+      dares: dares.fun,
       currentDares: [],
       currentDare: "",
       currentDareIndex: 0,
@@ -154,8 +154,9 @@ export default {
         );
         this.currentJogador = this.currentJogadores[this.currentIndex];
       }
+      this.currentJogador = `${this.currentJogador},`;
     },
-    getNewDate() {
+    getNewDare() {
       if (!this.currentDare) {
         this.currentDareIndex = Math.floor(
           Math.random() * this.currentDares.length
@@ -168,12 +169,13 @@ export default {
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       } else {
-        this.currentDares.splice(this.currentTruthIndex, 1);
+        this.currentDares.splice(this.currentDareIndex, 1);
         this.currentDareIndex = Math.floor(
           Math.random() * this.currentDares.length
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       }
+      this.getNewJogador();
       console.log(this.currentDare);
       console.log(this.currentDareIndex);
       console.log("tamanho: " + this.currentDares.length);
@@ -197,6 +199,7 @@ export default {
         );
         this.currentTruth = this.currentTruths[this.currentTruthIndex];
       }
+      this.getNewJogador();
       console.log(this.currentTruth);
       console.log(this.currentTruthIndex);
       console.log("tamanho: " + this.currentTruths.length);
