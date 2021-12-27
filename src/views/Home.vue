@@ -48,7 +48,7 @@
           {{ jogador }}
         </li>
       </ul>
-      <button @click="iniciarJogo">Continuar</button>
+      <button @click="currentStep = 'modosMenu'">Continuar</button>
     </div>
     <div class="card-container modos-container" v-else-if="currentStep === 'modosMenu'">
       <div class="fun">
@@ -128,7 +128,7 @@ export default {
       this.currentTruths = this.truths.slice();
       this.currentDares = this.dares.slice();
       this.getNewJogador();
-      this.currentStep = "modosMenu";
+      this.currentStep = "challengeMenu";
     },
     addJogador() {
       if (this.addingJogador === "") {
@@ -202,6 +202,7 @@ export default {
         this.getNewJogador();
       }
       this.currentChallenge = `, ${this.currentDare}`;
+      this.filterQuestion();
     },
     getNewTruth() {
       if (!this.currentTruth) {
@@ -228,15 +229,32 @@ export default {
         this.getNewJogador();
       }
       this.currentChallenge = `, ${this.currentTruth}`;
+      this.filterQuestion()
     },
 
     setModoDeJogo(modo) {
-      console.log("working")
       this.dares = Object.values(dares)[modo];
-      console.log(this.dares)
       this.truths = Object.values(truths)[modo];
-      console.log(this.truths)
-      
+      this.iniciarJogo();
+    },
+
+    getPartner() {
+      console.log(this.jogadores)
+      let index = Math.floor(Math.random() * this.jogadores.length);
+      console.log(index);
+      return this.jogadores[index];
+    },
+
+    filterQuestion() {
+      if(this.currentChallenge.includes('-jogador-')) {
+        let partner = this.getPartner();
+
+        while(this.currentJogador === partner) {
+          partner = this.getPartner();
+        }
+
+        this.currentChallenge = this.currentChallenge.replace('-jogador-', partner);
+      }
     },
 
     checkTheme(theme) {
