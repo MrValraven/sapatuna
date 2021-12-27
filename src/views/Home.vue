@@ -11,6 +11,7 @@
     <div class="card-container" v-else-if="currentStep === 'playerMenu'">
       <i class="fas fa-arrow-left" @click="currentStep = 'mainMenu'"></i>
       <h1>Jogadores</h1>
+      <button @click="resetJogadores">Reset jogadores</button>
       <ul>
         <li v-for="(jogador, index) in jogadores" :key="index">
           <span>{{ jogador.name }}</span>
@@ -99,7 +100,12 @@ export default {
       addingJogador: "",
       jogadores: [],
       currentJogadores: [],
-      currentJogador: "",
+      currentJogador: {
+        name: "",
+        sexuality: "",
+        gender: "",
+        compatibleWith: "",
+      },
       currentIndex: 0,
       truths: truths.soft,
       currentTruths: [],
@@ -124,7 +130,7 @@ export default {
 
     console.log(JSON.parse(localStorage.getItem('jogadores')));
 
-    this.jogadores = JSON.parse(localStorage.getItem("jogadores"));
+    this.jogadores = JSON.parse((localStorage.getItem("jogadores")));
   },
   methods: {
     iniciarJogo() {
@@ -145,8 +151,6 @@ export default {
         gender: 'Homem',
         compatibleWith: 'Mulher Non-binaryV'
       }
-
-      console.log("hehe")
 
       this.jogadores.push(jogadorBeingAdded);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
@@ -193,12 +197,30 @@ export default {
     updateSexuality(event, index) {
       const sexualityValue = event.target.value;
       this.jogadores[index].sexuality = sexualityValue;
+      this.jogadores[index].compatibleWith = this.getSexualCompatibility(sexualityValue, this.jogadores[index].gender);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
     },
     updateGender(event, index) {
       const genderValue = event.target.value;
       this.jogadores[index].gender = genderValue;
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
+    },
+    getSexualCompatibility(sexuality, gender) {
+      if(sexuality === 'Heterossexual' && gender === 'Homem') {
+        return 'Mulher';
+      }
+      else if(sexuality === 'Heterossexual' && gender === 'Mulher') {
+        return 'Homem';
+      }
+      else if(sexuality === 'Bissexual' || sexuality === 'Pansexual' || sexuality === 'Assexual') {
+        return 'Homem Mulher Non-binary';
+      }
+      else if(sexuality === 'Homossexual' && gender === 'Homem') {
+        return 'Homem';
+      }
+      else if(sexuality === 'Lésbica' && gender === 'Mulher'){
+        return 'Mulher'
+      }
     },
     getNewDare() {
       if (!this.currentDare) {
@@ -270,11 +292,13 @@ export default {
       if(this.currentChallenge.includes('-jogador-')) {
         let partner = this.getPartner();
 
-        while(this.currentJogador === partner) {
+        while(this.currentJogador === partner && !this.currentJogador.compatibleWith.includes(partner.gender)) {
           partner = this.getPartner();
         }
 
         this.currentChallenge = this.currentChallenge.replace('-jogador-', partner.name);
+        console.log(this.currentJogador);
+        console.log(partner);
       }
     },
 
