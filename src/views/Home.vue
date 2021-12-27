@@ -197,13 +197,25 @@ export default {
     updateSexuality(event, index) {
       const sexualityValue = event.target.value;
       this.jogadores[index].sexuality = sexualityValue;
+      if(sexualityValue === 'Lesbica') {
+        this.jogadores[index].gender = 'Mulher';
+      }
+      else if(sexualityValue === 'Homossexual') {
+        this.jogadores[index].gender = 'Homem';
+      }
       this.jogadores[index].compatibleWith = this.getSexualCompatibility(sexualityValue, this.jogadores[index].gender);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
     },
     updateGender(event, index) {
-      const genderValue = event.target.value;
+      let genderValue = event.target.value;
       this.jogadores[index].gender = genderValue;
-      this.jogadores[index].compatibleWith = this.getSexualCompatibility(this.jogadores[index].sexuality, genderValue);
+      if(this.jogadores[index].sexuality === 'Lesbica') {
+        this.jogadores[index].gender = 'Mulher';
+      }
+      else if(this.jogadores[index].sexuality === 'Homossexual') {
+        this.jogadores[index].gender = 'Homem';
+      }
+      this.jogadores[index].compatibleWith = this.getSexualCompatibility(this.jogadores[index].sexuality, this.jogadores[index].gender);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
     },
     getSexualCompatibility(sexuality, gender) {
@@ -219,7 +231,7 @@ export default {
       else if(sexuality === 'Homossexual' && gender === 'Homem') {
         return 'Homem';
       }
-      else if(sexuality === 'Lésbica' && gender === 'Mulher'){
+      else if(sexuality === 'Lesbica' && gender === 'Mulher'){
         return 'Mulher'
       }
     },
@@ -286,20 +298,30 @@ export default {
 
     getPartner() {
       let index = Math.floor(Math.random() * this.jogadores.length);
+      console.log("index ", index)
       return this.jogadores[index];
     },
 
     filterQuestion() {
+
+      let count = 0;
+
+      console.log("question: ", this.currentChallenge)
+
       if(this.currentChallenge.includes('-jogador-')) {
         let partner = this.getPartner();
-
-        while(this.currentJogador === partner && !this.currentJogador.compatibleWith.includes(partner.gender)) {
+        
+        while(this.currentJogador === partner || !this.currentJogador.compatibleWith.includes(partner.gender) || !partner.compatibleWith.includes(this.currentJogador.gender)) {
           partner = this.getPartner();
+          count++;
+
+          if(count === 500) {
+            this.currentChallenge = this.currentChallenge.replace('-jogador-', "Erro do sistema");
+            return;
+          }
         }
 
         this.currentChallenge = this.currentChallenge.replace('-jogador-', partner.name);
-        console.log(this.currentJogador);
-        console.log(partner);
       }
     },
 
