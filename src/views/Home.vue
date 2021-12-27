@@ -203,6 +203,7 @@ export default {
     updateGender(event, index) {
       const genderValue = event.target.value;
       this.jogadores[index].gender = genderValue;
+      this.jogadores[index].compatibleWith = this.getSexualCompatibility(this.jogadores[index].sexuality, genderValue);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
     },
     getSexualCompatibility(sexuality, gender) {
