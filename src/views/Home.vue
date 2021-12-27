@@ -50,6 +50,23 @@
       </ul>
       <button @click="iniciarJogo">Continuar</button>
     </div>
+    <div class="card-container modos-container" v-else-if="currentStep === 'modosMenu'">
+      <div class="fun">
+        <button @click=setModoDeJogo(0)>Fun</button>
+      </div>
+      <div class="soft">
+        <button @click=setModoDeJogo(1)>Soft</button>
+      </div>
+      <div class="hot">
+        <button @click=setModoDeJogo(2)>Hot</button>
+      </div>
+      <div class="hard">
+        <button @click=setModoDeJogo(3)>Hard</button>
+      </div>
+      <div class="extremo">
+        <button @click=setModoDeJogo(4)>Extremo</button>
+      </div>
+    </div>
     <div
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
@@ -92,12 +109,17 @@ export default {
       currentDareIndex: 0,
       currentChallenge: "",
       isFirstRound: true,
+      currentModoDeJogo: "",
     };
   },
   created() {
-    if (localStorage.getItem("jogadores").length === 0) {
+    if(!localStorage.getItem("jogadores")) {
       return;
     }
+    else if (localStorage.getItem("jogadores").length === 0) {
+      return;
+    }
+
     this.jogadores = localStorage.getItem("jogadores").split(",");
   },
   methods: {
@@ -106,7 +128,7 @@ export default {
       this.currentTruths = this.truths.slice();
       this.currentDares = this.dares.slice();
       this.getNewJogador();
-      this.currentStep = "challengeMenu";
+      this.currentStep = "modosMenu";
     },
     addJogador() {
       if (this.addingJogador === "") {
@@ -206,6 +228,15 @@ export default {
         this.getNewJogador();
       }
       this.currentChallenge = `, ${this.currentTruth}`;
+    },
+
+    setModoDeJogo(modo) {
+      console.log("working")
+      this.dares = Object.values(dares)[modo];
+      console.log(this.dares)
+      this.truths = Object.values(truths)[modo];
+      console.log(this.truths)
+      
     },
 
     checkTheme(theme) {
