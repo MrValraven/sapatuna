@@ -86,7 +86,7 @@
           ></i>
         </div>
         <div class="input-container-buttons">
-          <button @click="currentStep = 'cycleMenu'">Começar</button>
+          <button @click="nextPhaseAfterPlayers">Começar</button>
           <button @click="resetJogadores">Reset jogadores</button>
         </div>
       </div>
@@ -371,12 +371,13 @@ export default {
     },
 
     filterQuestion() {
-      let count = 0;
-
       console.log("question: ", this.currentChallenge);
 
       if (this.currentChallenge.includes("-jogador-")) {
         let partner = this.getPartner();
+        let partner2 = this.getPartner();
+        let count = 0;
+        let count2 = 0;
 
         while (
           this.currentJogador === partner ||
@@ -390,7 +391,7 @@ export default {
             while (this.currentJogador === partner) {
               partner = this.getPartner();
             }
-            this.currentChallenge = this.currentChallenge.replace(
+            this.currentChallenge = this.currentChallenge.replaceAll(
               "-jogador-",
               partner.name
             );
@@ -398,11 +399,51 @@ export default {
           }
         }
 
-        this.currentChallenge = this.currentChallenge.replace(
+        if (this.currentChallenge.includes("-jogador2-")) {
+          while (
+            partner2 === partner ||
+            partner2 === this.currentJogador ||
+            !this.currentJogador.compatibleWith.includes(partner2.gender) ||
+            !partner2.compatibleWith.includes(this.currentJogador.gender)
+          ) {
+            partner2 = this.getPartner();
+            count2++;
+
+            if (count2 === 500) {
+              while (partner2 === partner || partner2 === this.currentJogador) {
+                partner2 = this.getPartner();
+              }
+              this.currentChallenge = this.currentChallenge.replaceAll(
+                "-jogador2-",
+                partner2.name
+              );
+              return;
+            }
+          }
+
+          this.currentChallenge = this.currentChallenge.replaceAll(
+            "-jogador2-",
+            partner2.name
+          );
+        }
+        this.currentChallenge = this.currentChallenge.replaceAll(
           "-jogador-",
           partner.name
         );
+
+        if (this.currentChallenge.includes("-currentJogador-")) {
+          this.currentChallenge = this.currentChallenge.replaceAll(
+            "-currentJogador-",
+            this.currentJogador.name
+          );
+        }
       }
+    },
+
+    nextPhaseAfterPlayers() {
+      if (this.jogadores.length === 0) return;
+
+      this.currentStep = "cycleMenu";
     },
 
     checkTheme(theme) {
