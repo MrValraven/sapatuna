@@ -11,21 +11,63 @@
     <div class="card-container" v-else-if="currentStep === 'playerMenu'">
       <i class="fas fa-arrow-left" @click="currentStep = 'mainMenu'"></i>
       <h1>Jogadores</h1>
+      <button @click="resetJogadores">Reset jogadores</button>
       <ul>
         <li v-for="(jogador, index) in jogadores" :key="index">
-          <span>{{ jogador }}</span>
-          <select name="orientacaoSexual" id="orientacaoSexual">
-            <option value="assexual">Assexual</option>
-            <option value="bissexual">Bissexual</option>
-            <option selected value="heterossexual">Heterossexual</option>
-            <option value="homossexual">Homossexual</option>
-            <option value="lesbica">Lésbica</option>
-            <option value="pansexual">Pansexual</option>
+          <span>{{ jogador.name }}</span>
+          <select
+            name="orientacaoSexual"
+            id="orientacaoSexual"
+            @change="updateSexuality($event, index)"
+          >
+            <option selected value="jogador.sexuality">
+              {{ jogador.sexuality }}
+            </option>
+            <option value="Assexual" v-if="jogador.sexuality !== 'Assexual'">
+              Assexual
+            </option>
+            <option value="Bissexual" v-if="jogador.sexuality !== 'Bissexual'">
+              Bissexual
+            </option>
+            <option
+              value="Heterossexual"
+              v-if="jogador.sexuality !== 'Heterossexual'"
+            >
+              Heterossexual
+            </option>
+            <option
+              value="Homossexual"
+              v-if="jogador.sexuality !== 'Homossexual'"
+            >
+              Homossexual
+            </option>
+            <option value="Lesbica" v-if="jogador.sexuality !== 'Lésbica'">
+              Lésbica
+            </option>
+            <option
+              value="Pansexual"
+              v-if="jogador.sexuality !== 'PanAssexual'"
+            >
+              Pansexual
+            </option>
           </select>
-          <select name="genero" id="genero">
-            <option value="s">Homem</option>
-            <option value="s">Mulher</option>
-            <option value="s">Não-binário</option>
+          <select
+            name="genero"
+            id="genero"
+            @change="updateGender($event, index)"
+          >
+            <option selected value="jogador.gender">
+              {{ jogador.gender }}
+            </option>
+            <option value="Homem" v-if="jogador.gender !== 'Homem'">
+              Homem
+            </option>
+            <option value="Mulher" v-if="jogador.gender !== 'Mulher'">
+              Mulher
+            </option>
+            <option value="Non-binary" v-if="jogador.gender !== 'Non-binary'">
+              Non-binary
+            </option>
           </select>
           <i class="far fa-times-circle" @click="removeJogador(index)"></i>
         </li>
@@ -55,17 +97,37 @@
       v-else-if="currentStep === 'cycleMenu'"
     >
       <ul>
-        <li v-for="jogador in jogadores" :key="jogador">
-          {{ jogador }}
+        <li v-for="(jogador, index) in jogadores" :key="index">
+          {{ jogador.name }}
         </li>
       </ul>
-      <button @click="iniciarJogo">Continuar</button>
+      <button @click="currentStep = 'modosMenu'">Continuar</button>
+    </div>
+    <div
+      class="card-container modos-container"
+      v-else-if="currentStep === 'modosMenu'"
+    >
+      <div class="fun">
+        <button @click="setModoDeJogo(0)">Fun</button>
+      </div>
+      <div class="soft">
+        <button @click="setModoDeJogo(1)">Soft</button>
+      </div>
+      <div class="hot">
+        <button @click="setModoDeJogo(2)">Hot</button>
+      </div>
+      <div class="hard">
+        <button @click="setModoDeJogo(3)">Hard</button>
+      </div>
+      <div class="extremo">
+        <button @click="setModoDeJogo(4)">Extremo</button>
+      </div>
     </div>
     <div
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
-      <h1>{{ currentJogador }}</h1>
+      <h1>{{ currentJogador.name }}{{ currentChallenge }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
         <DareCard @click="getNewDare" />
@@ -95,7 +157,12 @@ export default {
       jogadorBeingAdded: "",
       jogadores: [],
       currentJogadores: [],
-      currentJogador: "",
+      currentJogador: {
+        name: "",
+        sexuality: "",
+        gender: "",
+        compatibleWith: "",
+      },
       currentIndex: 0,
       truths: truths.soft,
       currentTruths: [],
@@ -106,13 +173,19 @@ export default {
       currentDare: "",
       currentDareIndex: 0,
       currentChallenge: "",
+      currentModoDeJogo: "",
     };
   },
   created() {
-    if (localStorage.getItem("jogadores").length === 0) {
+    if (!localStorage.getItem("jogadores")) {
+      return;
+    } else if (localStorage.getItem("jogadores").length === 0) {
       return;
     }
-    this.jogadores = localStorage.getItem("jogadores").split(",");
+
+    console.log(JSON.parse(localStorage.getItem("jogadores")));
+
+    this.jogadores = JSON.parse(localStorage.getItem("jogadores"));
   },
   methods: {
     iniciarJogo() {
@@ -127,9 +200,17 @@ export default {
         return;
       }
 
-      this.jogadores.push(this.jogadorBeingAdded);
-      this.jogadorBeingAdded = "";
-      localStorage.setItem("jogadores", this.jogadores);
+      let jogadorBeingAdded = {
+        name: this.addingJogador,
+        sexuality: "Heterossexual",
+        gender: "Homem",
+        compatibleWith: "Mulher Non-binaryV",
+      };
+
+      this.jogadores.push(jogadorBeingAdded);
+      localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
+      console.log(this.jogadores);
+      this.addingJogador = "";
     },
 
     removeJogador(indice) {
@@ -168,6 +249,51 @@ export default {
         this.currentJogador = this.currentJogadores[this.currentIndex];
       }
     },
+    updateSexuality(event, index) {
+      const sexualityValue = event.target.value;
+      this.jogadores[index].sexuality = sexualityValue;
+      if (sexualityValue === "Lesbica") {
+        this.jogadores[index].gender = "Mulher";
+      } else if (sexualityValue === "Homossexual") {
+        this.jogadores[index].gender = "Homem";
+      }
+      this.jogadores[index].compatibleWith = this.getSexualCompatibility(
+        sexualityValue,
+        this.jogadores[index].gender
+      );
+      localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
+    },
+    updateGender(event, index) {
+      let genderValue = event.target.value;
+      this.jogadores[index].gender = genderValue;
+      if (this.jogadores[index].sexuality === "Lesbica") {
+        this.jogadores[index].gender = "Mulher";
+      } else if (this.jogadores[index].sexuality === "Homossexual") {
+        this.jogadores[index].gender = "Homem";
+      }
+      this.jogadores[index].compatibleWith = this.getSexualCompatibility(
+        this.jogadores[index].sexuality,
+        this.jogadores[index].gender
+      );
+      localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
+    },
+    getSexualCompatibility(sexuality, gender) {
+      if (sexuality === "Heterossexual" && gender === "Homem") {
+        return "Mulher";
+      } else if (sexuality === "Heterossexual" && gender === "Mulher") {
+        return "Homem";
+      } else if (
+        sexuality === "Bissexual" ||
+        sexuality === "Pansexual" ||
+        sexuality === "Assexual"
+      ) {
+        return "Homem Mulher Non-binary";
+      } else if (sexuality === "Homossexual" && gender === "Homem") {
+        return "Homem";
+      } else if (sexuality === "Lesbica" && gender === "Mulher") {
+        return "Mulher";
+      }
+    },
     getNewDare() {
       if (!this.currentDare) {
         this.currentDareIndex = Math.floor(
@@ -188,6 +314,7 @@ export default {
         this.currentDare = this.currentDares[this.currentDareIndex];
       }
       this.currentChallenge = `, ${this.currentDare}`;
+      this.filterQuestion();
       this.currentStep = "questionMenu";
     },
     getNewTruth() {
@@ -215,6 +342,51 @@ export default {
     },
     proceedToNextChallenge() {
       (this.currentStep = "challengeMenu"), this.getNewJogador();
+      this.filterQuestion();
+    },
+
+    setModoDeJogo(modo) {
+      this.dares = Object.values(dares)[modo];
+      this.truths = Object.values(truths)[modo];
+      this.iniciarJogo();
+    },
+
+    getPartner() {
+      let index = Math.floor(Math.random() * this.jogadores.length);
+      console.log("index ", index);
+      return this.jogadores[index];
+    },
+
+    filterQuestion() {
+      let count = 0;
+
+      console.log("question: ", this.currentChallenge);
+
+      if (this.currentChallenge.includes("-jogador-")) {
+        let partner = this.getPartner();
+
+        while (
+          this.currentJogador === partner ||
+          !this.currentJogador.compatibleWith.includes(partner.gender) ||
+          !partner.compatibleWith.includes(this.currentJogador.gender)
+        ) {
+          partner = this.getPartner();
+          count++;
+
+          if (count === 500) {
+            this.currentChallenge = this.currentChallenge.replace(
+              "-jogador-",
+              "Erro do sistema"
+            );
+            return;
+          }
+        }
+
+        this.currentChallenge = this.currentChallenge.replace(
+          "-jogador-",
+          partner.name
+        );
+      }
     },
 
     checkTheme(theme) {
