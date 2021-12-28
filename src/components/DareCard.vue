@@ -29,4 +29,17 @@ $sexyRed: #e62020;
     cursor: pointer;
   }
 }
+
+@media (max-width: 600px) {
+  .dare-container {
+    width: 350px;
+    height: 700px;
+    padding: 0;
+    margin: 0;
+    h1 {
+      transform: rotate(-90deg);
+      margin-right: 100px;
+    }
+  }
+}
 </style>

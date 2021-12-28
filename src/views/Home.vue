@@ -138,8 +138,8 @@
       ></i>
       <h1>{{ currentJogador.name }}</h1>
       <div class="challenges-container-cards">
-        <TruthCard @click="getNewTruth" />
-        <DareCard @click="getNewDare" />
+        <TruthCard class="truth-card" @click="getNewTruth" />
+        <DareCard class="dare-card" @click="getNewDare" />
       </div>
     </div>
     <div class="question-container" v-else-if="currentStep === 'questionMenu'">
@@ -690,6 +690,89 @@ export default {
     &:hover {
       cursor: pointer;
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    .card-container {
+      width: 100%;
+      min-height: 100vh;
+      height: auto;
+      box-shadow: 0 0 0 0;
+      padding: 30px;
+
+      h2 {
+        text-align: center;
+      }
+    }
+
+    .challenges-container {
+      width: 100%;
+      min-height: 100vh;
+      height: auto;
+      box-shadow: 0 0 0 0;
+      position: relative;
+
+      h1 {
+        font-size: 30px;
+        position: absolute;
+        min-width: 1200px;
+        top: 43%;
+        background-color: white;
+        padding: 20px;
+        transform: rotate(-45deg);
+        z-index: 4;
+      }
+
+      .challenges-container-cards {
+        display: block;
+        height: 100vh;
+        width: 100%;
+
+        .truth-card {
+          position: absolute;
+          z-index: 2;
+          transform: rotate(45deg);
+          right: 100px;
+          top: -30%;
+        }
+
+        .dare-card {
+          position: absolute;
+          z-index: 3;
+          top: 30%;
+          left: 30%;
+          transform: rotate(45deg);
+        }
+      }
+    }
+
+    .question-container {
+      box-shadow: none;
+      min-width: 100%;
+      max-width: 100%;
+      height: 100vh;
+      padding: 50px 30px;
+
+      h2 {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .container .backArrow {
+    left: 40px;
+    top: 25px;
+    z-index: 50;
+  }
+  .container .challenges-container .backArrow {
+    left: 20px;
+    top: 20px;
+    z-index: 50;
+    padding: 10px 12px;
+    background: white;
+    border-radius: 50%;
   }
 }
 </style>

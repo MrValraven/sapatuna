@@ -30,4 +30,16 @@ $lightBlue: #add8e6;
     cursor: pointer;
   }
 }
+
+@media (max-width: 600px) {
+  .truth-container {
+    width: 350px;
+    height: 700px;
+    margin: 0;
+    padding: 0;
+    h1 {
+      transform: rotate(-90deg);
+    }
+  }
+}
 </style>
