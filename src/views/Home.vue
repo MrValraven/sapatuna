@@ -11,7 +11,6 @@
     <div class="card-container" v-else-if="currentStep === 'playerMenu'">
       <i class="fas fa-arrow-left" @click="currentStep = 'mainMenu'"></i>
       <h1>Jogadores</h1>
-      <button @click="resetJogadores">Reset jogadores</button>
       <ul>
         <li v-for="(jogador, index) in jogadores" :key="index">
           <span>{{ jogador.name }}</span>
@@ -44,10 +43,7 @@
             <option value="Lesbica" v-if="jogador.sexuality !== 'Lésbica'">
               Lésbica
             </option>
-            <option
-              value="Pansexual"
-              v-if="jogador.sexuality !== 'PanAssexual'"
-            >
+            <option value="Pansexual" v-if="jogador.sexuality !== 'Panssexual'">
               Pansexual
             </option>
           </select>
@@ -127,14 +123,15 @@
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
-      <h1>{{ currentJogador.name }}{{ currentChallenge }}</h1>
+      <h1>{{ currentJogador.name }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
         <DareCard @click="getNewDare" />
       </div>
     </div>
     <div class="question-container" v-else-if="currentStep === 'questionMenu'">
-      <h1>{{ currentJogador }}{{ currentChallenge }}</h1>
+      <h1>{{ currentChallengeType }}</h1>
+      <h2>{{ currentJogador.name }}{{ currentChallenge }}</h2>
       <button @click="proceedToNextChallenge">Próximo desafio</button>
     </div>
   </section>
@@ -174,6 +171,7 @@ export default {
       currentDareIndex: 0,
       currentChallenge: "",
       currentModoDeJogo: "",
+      currentChallengeType: "",
     };
   },
   created() {
@@ -201,7 +199,7 @@ export default {
       }
 
       let jogadorBeingAdded = {
-        name: this.addingJogador,
+        name: this.jogadorBeingAdded,
         sexuality: "Heterossexual",
         gender: "Homem",
         compatibleWith: "Mulher Non-binaryV",
@@ -210,7 +208,7 @@ export default {
       this.jogadores.push(jogadorBeingAdded);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
       console.log(this.jogadores);
-      this.addingJogador = "";
+      this.jogadorBeingAdded = "";
     },
 
     removeJogador(indice) {
@@ -313,6 +311,7 @@ export default {
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       }
+      this.currentChallengeType = "Consequência";
       this.currentChallenge = `, ${this.currentDare}`;
       this.filterQuestion();
       this.currentStep = "questionMenu";
@@ -337,12 +336,13 @@ export default {
         this.currentTruth = this.currentTruths[this.currentTruthIndex];
       }
 
+      this.currentChallengeType = "Verdade";
       this.currentChallenge = `, ${this.currentTruth}`;
+      this.filterQuestion();
       this.currentStep = "questionMenu";
     },
     proceedToNextChallenge() {
       (this.currentStep = "challengeMenu"), this.getNewJogador();
-      this.filterQuestion();
     },
 
     setModoDeJogo(modo) {
@@ -374,9 +374,12 @@ export default {
           count++;
 
           if (count === 500) {
+            while (this.currentJogador === partner) {
+              partner = this.getPartner();
+            }
             this.currentChallenge = this.currentChallenge.replace(
               "-jogador-",
-              "Erro do sistema"
+              partner.name
             );
             return;
           }
