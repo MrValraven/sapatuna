@@ -127,9 +127,6 @@
       <div class="hard">
         <button @click="setModoDeJogo(3)">Hard</button>
       </div>
-      <div class="extremo">
-        <button @click="setModoDeJogo(4)">Extremo</button>
-      </div>
     </div>
     <div
       class="challenges-container"
