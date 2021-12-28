@@ -32,7 +32,18 @@
       </ul>
       <div class="input-container">
         <label for="jogador">Adicionar um jogador</label>
-        <input type="text" v-model="addingJogador" @keyup.enter="addJogador" />
+        <div class="input-container-inside">
+          <input
+            type="text"
+            v-model="jogadorBeingAdded"
+            @keyup.enter="addJogador"
+          />
+          <i
+            alt="Adicionar Jogador"
+            class="fas fa-plus-square"
+            @click="addJogador"
+          ></i>
+        </div>
         <div class="input-container-buttons">
           <button @click="currentStep = 'cycleMenu'">Começar</button>
           <button @click="resetJogadores">Reset jogadores</button>
@@ -54,11 +65,15 @@
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
-      <h1>{{ currentJogador }}{{ currentChallenge }}</h1>
+      <h1>{{ currentJogador }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
         <DareCard @click="getNewDare" />
       </div>
+    </div>
+    <div class="question-container" v-else-if="currentStep === 'questionMenu'">
+      <h1>{{ currentJogador }}{{ currentChallenge }}</h1>
+      <button @click="proceedToNextChallenge">Próximo desafio</button>
     </div>
   </section>
 </template>
@@ -77,7 +92,7 @@ export default {
   data() {
     return {
       currentStep: "mainMenu",
-      addingJogador: "",
+      jogadorBeingAdded: "",
       jogadores: [],
       currentJogadores: [],
       currentJogador: "",
@@ -91,7 +106,6 @@ export default {
       currentDare: "",
       currentDareIndex: 0,
       currentChallenge: "",
-      isFirstRound: true,
     };
   },
   created() {
@@ -109,14 +123,13 @@ export default {
       this.currentStep = "challengeMenu";
     },
     addJogador() {
-      if (this.addingJogador === "") {
+      if (this.jogadorBeingAdded === "") {
         return;
       }
 
-      this.jogadores.push(this.addingJogador);
-      this.addingJogador = "";
+      this.jogadores.push(this.jogadorBeingAdded);
+      this.jogadorBeingAdded = "";
       localStorage.setItem("jogadores", this.jogadores);
-      console.log(this.jogadores);
     },
 
     removeJogador(indice) {
@@ -174,12 +187,8 @@ export default {
         );
         this.currentDare = this.currentDares[this.currentDareIndex];
       }
-      if (this.isFirstRound) {
-        this.isFirstRound = false;
-      } else {
-        this.getNewJogador();
-      }
       this.currentChallenge = `, ${this.currentDare}`;
+      this.currentStep = "questionMenu";
     },
     getNewTruth() {
       if (!this.currentTruth) {
@@ -200,12 +209,12 @@ export default {
         );
         this.currentTruth = this.currentTruths[this.currentTruthIndex];
       }
-      if (this.isFirstRound) {
-        this.isFirstRound = false;
-      } else {
-        this.getNewJogador();
-      }
+
       this.currentChallenge = `, ${this.currentTruth}`;
+      this.currentStep = "questionMenu";
+    },
+    proceedToNextChallenge() {
+      (this.currentStep = "challengeMenu"), this.getNewJogador();
     },
 
     checkTheme(theme) {
@@ -314,11 +323,29 @@ export default {
       text-align: left;
       flex-direction: column;
 
+      .input-container-inside {
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+
+        i {
+          color: blue;
+          width: 5%;
+          font-size: 25px;
+          margin-left: 10px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+
       label {
         font-weight: bold;
       }
 
       input {
+        width: 95%;
         padding: 10px 10px 0px 5px;
         border: none;
         border-bottom: 1px solid black;
@@ -365,10 +392,47 @@ export default {
     height: 800px;
     border: 2px solid grey;
 
+    h1 {
+      max-width: 70%;
+      text-align: center;
+    }
+
     .challenges-container-cards {
       display: flex;
       justify-content: space-evenly;
       align-items: center;
+    }
+  }
+
+  .question-container {
+    min-width: 400px;
+    height: 400px;
+    max-width: 900px;
+    padding: 20px 30px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 40px;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    button {
+      outline: none;
+      border: 1px solid black;
+      border-radius: 12px;
+      padding: 10px 20px;
+      width: 100px;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
