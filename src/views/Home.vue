@@ -9,7 +9,10 @@
       </div>
     </div>
     <div class="card-container" v-else-if="currentStep === 'playerMenu'">
-      <i class="fas fa-arrow-left" @click="currentStep = 'mainMenu'"></i>
+      <i
+        class="fas fa-arrow-left backArrow"
+        @click="currentStep = 'mainMenu'"
+      ></i>
       <h1>Jogadores</h1>
       <ul>
         <li v-for="(jogador, index) in jogadores" :key="index">
@@ -92,6 +95,10 @@
       class="card-container cycle-container"
       v-else-if="currentStep === 'cycleMenu'"
     >
+      <i
+        class="fas fa-arrow-left backArrow"
+        @click="currentStep = 'playerMenu'"
+      ></i>
       <ul>
         <li v-for="(jogador, index) in jogadores" :key="index">
           {{ jogador.name }}
@@ -103,6 +110,11 @@
       class="card-container modos-container"
       v-else-if="currentStep === 'modosMenu'"
     >
+      <i
+        class="fas fa-arrow-left backArrow"
+        @click="currentStep = 'cycleMenu'"
+      ></i>
+      <h1>Modos de jogo</h1>
       <div class="fun">
         <button @click="setModoDeJogo(0)">Fun</button>
       </div>
@@ -123,6 +135,10 @@
       class="challenges-container"
       v-else-if="currentStep === 'challengeMenu'"
     >
+      <i
+        class="fas fa-arrow-left backArrow"
+        @click="currentStep = 'modosMenu'"
+      ></i>
       <h1>{{ currentJogador.name }}</h1>
       <div class="challenges-container-cards">
         <TruthCard @click="getNewTruth" />
@@ -199,10 +215,10 @@ export default {
       }
 
       let jogadorBeingAdded = {
-        name: this.jogadorBeingAdded,
+        name: this.jogadorBeingAdded.trim(),
         sexuality: "Heterossexual",
         gender: "Homem",
-        compatibleWith: "Mulher Non-binaryV",
+        compatibleWith: "Mulher Non-binary",
       };
 
       this.jogadores.push(jogadorBeingAdded);
@@ -474,17 +490,6 @@ export default {
       }
     }
 
-    .fa-arrow-left {
-      position: absolute;
-      top: 28px;
-      left: 20px;
-      font-size: 20px;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
     .fa-times-circle {
       color: rgb(165, 19, 19);
 
@@ -558,6 +563,25 @@ export default {
     }
   }
 
+  .modos-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    button {
+      width: 300px;
+      padding: 15px 25px;
+      outline: none;
+      border: 1px solid black;
+      border-radius: 20px;
+      margin-bottom: 25px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
   .challenges-container {
     display: flex;
     justify-content: space-evenly;
@@ -566,6 +590,7 @@ export default {
     width: 1200px;
     height: 800px;
     border: 2px solid grey;
+    position: relative;
 
     h1 {
       max-width: 70%;
@@ -591,9 +616,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
 
     h1 {
       font-size: 40px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    h2 {
+      max-width: 70%;
       font-weight: 400;
       text-align: center;
     }
@@ -608,6 +640,17 @@ export default {
       &:hover {
         cursor: pointer;
       }
+    }
+  }
+
+  .backArrow {
+    position: absolute;
+    top: 28px;
+    left: 20px;
+    font-size: 20px;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 }
