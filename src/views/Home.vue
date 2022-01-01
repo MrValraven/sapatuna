@@ -5,7 +5,14 @@
       <h2>O melhor party game forévora</h2>
       <div class="button-container">
         <button @click="currentStep = 'playerMenu'">Jogar</button>
-        <button>Donate 💓</button>
+        <a
+          href="https://ko-fi.com/mrvalraven"
+          target="_blank"
+          rel="noreferrer"
+          class="donateLink"
+        >
+          <button>Donate 💓</button>
+        </a>
       </div>
     </div>
     <div class="card-container" v-else-if="currentStep === 'playerMenu'">
@@ -479,6 +486,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .donateLink {
+    opacity: 1;
+  }
 
   .card-container {
     width: auto;
