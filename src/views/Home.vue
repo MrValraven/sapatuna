@@ -160,8 +160,8 @@
 <script>
 import DareCard from "@/components/DareCard.vue";
 import TruthCard from "@/components/TruthCard.vue";
-import truths from "@/static/truths.json";
-import dares from "@/static/dares.json";
+import truthsJson from "@/static/verdades.json";
+import daresJson from "@/static/consequencias.json";
 export default {
   components: {
     TruthCard,
@@ -181,11 +181,11 @@ export default {
         compatibleWith: "",
       },
       currentIndex: 0,
-      truths: truths.soft,
+      truths: truthsJson.fun,
       currentTruths: [],
       currentTruth: "",
       currentTruthIndex: 0,
-      dares: dares.fun,
+      dares: daresJson.fun,
       currentDares: [],
       currentDare: "",
       currentDareIndex: 0,
@@ -200,9 +200,6 @@ export default {
     } else if (localStorage.getItem("jogadores").length === 0) {
       return;
     }
-
-    console.log(JSON.parse(localStorage.getItem("jogadores")));
-
     this.jogadores = JSON.parse(localStorage.getItem("jogadores"));
   },
   methods: {
@@ -227,7 +224,6 @@ export default {
 
       this.jogadores.push(jogadorBeingAdded);
       localStorage.setItem("jogadores", JSON.stringify(this.jogadores));
-      console.log(this.jogadores);
       this.jogadorBeingAdded = "";
     },
 
@@ -366,8 +362,29 @@ export default {
     },
 
     setModoDeJogo(modo) {
-      this.dares = Object.values(dares)[modo];
-      this.truths = Object.values(truths)[modo];
+      console.log(modo);
+      switch (modo) {
+        case 0:
+          console.log("fun");
+          this.dares = daresJson["fun"];
+          this.truths = truthsJson["fun"];
+          break;
+        case 1:
+          console.log("soft");
+          this.dares = daresJson["soft"];
+          this.truths = truthsJson["soft"];
+          break;
+        case 2:
+          this.dares = daresJson["hot"];
+          this.truths = truthsJson["hot"];
+          break;
+        case 3:
+          this.dares = daresJson["hard"];
+          this.truths = truthsJson["hard"];
+          break;
+        default:
+          break;
+      }
       this.iniciarJogo();
     },
 
