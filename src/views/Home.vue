@@ -160,8 +160,8 @@
 <script>
 import DareCard from "@/components/DareCard.vue";
 import TruthCard from "@/components/TruthCard.vue";
-import truthsJson from "@/static/verdades.json";
-import daresJson from "@/static/consequencias.json";
+import truthsJson from "@/static/truths.json";
+import daresJson from "@/static/dares.json";
 export default {
   components: {
     TruthCard,
