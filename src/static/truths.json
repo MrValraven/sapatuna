@@ -1,5 +1,5 @@
 {
-  "fun": [
+  "fun1": [
     "qual superpoder escolherias entre voar e ficar invisível?",
     "na tua opinião, qual dos jogadores tem a maior chance de ser tornar milionário?",
     "na tua opinião, qual é o jogador mais generoso?",
@@ -24,7 +24,7 @@
     "qual foi a maior loucura que já fizeste enquanto estavas bêbado",
     "já foste bêbado para uma aula?"
   ],
-  "funEN": [
+  "fun": [
     "which superpower would you choose between flying and being invisible?",
     "in your opinion, which player has the best chance of becoming a millionaire?",
     "in your opinion, who is the most generous player?",
@@ -49,7 +49,7 @@
     "what's the craziest thing you ever did while you were drunk",
     "have you ever gone drunk to class?"
   ],
-  "soft": [
+  "soft1": [
     "o que te chama a atenção num perfil de uma pessoa num aplicativo de encontros?",
     "já foste a uma praia de nudismo?",
     "Só podes escolher consequência nas próximas 3 rondas.",
@@ -82,7 +82,7 @@
     "qual é a parte do corpo de -jogador- que gostas mais?",
     "já foste a um clube de strip?"
   ],
-  "softEN": [
+  "soft": [
     "What catches your eye in a person's dating app profile?",
     "have you ever been to a nude beach?",
     "you can only choose dare in the next 3 rounds.",
@@ -114,7 +114,7 @@
     "which part of -jogador-'s body do you like the most?",
     "have you ever been to a strip club?"
   ],
-  "hot": [
+  "hot1": [
     "descreve em 5 palavras o teu último desempenho na cama.",
     "quais são as tuas zonas mais erógenas?",
     "serias capaz de te fechar num armário ou despensa para fazer sexo com alguem durante uma festa entre amigos?",
@@ -157,7 +157,7 @@
     "cita duas qualidades que aches que são indispensáveis num parceiro sexual.",
     "quanto tempo devem durar os preliminares?"
   ],
-  "hotEN": [
+  "hot": [
     "describe in 5 words your last performance in bed.",
     "what are your most erogenous zones?",
     "would you be able to lock yourself in a closet or pantry to have sex with someone during a party with friends?",
@@ -200,7 +200,7 @@
     "cite two qualities that you think are indispensable in a sexual partner.",
     "How long should foreplay last?"
   ],
-  "hard": [
+  "hard1": [
     "gostas de usar fantasias ou fazer roleplay de personagens durante o sexo?",
     "já utilizaste objetos sexuais para o anus? Se sim, quais?",
     "com quantos anos fizeste sexo oral a alguém pela primeira vez?",
@@ -248,7 +248,7 @@
     "quais são os teus fetiches sexuais?",
     "viverias com alguem que quisesse fazer sexo pelo menos 3 vezes por dia?"
   ],
-  "hardEN": [
+  "hard": [
     "do you like wearing costumes or roleplaying characters during sex?",
     "Have you ever used sexual objects for the anus? If so, which ones?",
     "How old were you when you performed oral sex on someone for the first time?",
